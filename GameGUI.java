@@ -154,5 +154,288 @@ class GameGUI extends JFrame {
         feedbackFrame.setLocationRelativeTo(null); // Center the window
         feedbackFrame.setVisible(true);
     }
+private void openSymbolSelection() {
+        JFrame matchSelectionFrame = new JFrame("Choose Your Symbol");
+        matchSelectionFrame.setSize(1600, 1000);
+        matchSelectionFrame.setLayout(null);
+        matchSelectionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Add a background image
+        JLabel background;
+        ImageIcon img = new ImageIcon("C:\\Users\\fatima\\Desktop\\areeba uni\\2nd semester\\DATA STRUCTURE\\data labs\\oop background.jpg");
+        background = new JLabel("", img, JLabel.CENTER);
+        background.setBounds(0, 0, 1600, 1000);
+        matchSelectionFrame.add(background);
+
+        // Title text: "Choose Your Symbol"
+        JLabel textLabel = new JLabel("Choose Your Symbol", JLabel.CENTER);
+        textLabel.setFont(new Font("Garamond", Font.PLAIN, 60));
+        textLabel.setForeground(new Color(0xFFFBFFDE, true));
+        textLabel.setBounds(500, 50, 800, 70);
+        background.add(textLabel);
+
+        // Quotation text
+        JLabel quote = new JLabel("The only way to do great work is to love what you do.", JLabel.CENTER);
+        quote.setFont(new Font("Garamond", Font.BOLD, 40));
+        quote.setForeground(new Color(0xFFFBFFDE, true));
+        quote.setBounds(300, textLabel.getY() + textLabel.getHeight() + 20, 1000, 50);
+        background.add(quote);
+
+        // Button: X Symbol
+        JButton XButton = new JButton("X");
+        XButton.setFont(new Font("Garamond", Font.PLAIN, 20));
+        XButton.setBackground(new Color(0xD64161));
+        XButton.setForeground(Color.WHITE);
+        XButton.setFocusPainted(false);
+        XButton.setBorderPainted(false);
+        XButton.setBounds(600, 300, 300, 50);
+        background.add(XButton);
+
+        // Button: O Symbol
+        JButton OButton = new JButton("O");
+        OButton.setFont(new Font("Garamond", Font.PLAIN, 20));
+        OButton.setBackground(new Color(0x6B5B95));
+        OButton.setForeground(Color.WHITE);
+        OButton.setFocusPainted(false);
+        OButton.setBorderPainted(false);
+        OButton.setBounds(600, 400, 300, 50);
+        background.add(OButton);
+
+        // Action listener for X button
+        XButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new TicTacToe("X");
+                matchSelectionFrame.dispose();
+            }
+        });
+
+        // Action listener for O button
+        OButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new TicTacToe("O");
+                matchSelectionFrame.dispose();
+            }
+        });
+
+        matchSelectionFrame.setVisible(true);
+    }
+
+
+
+
+}
+
+class Main{
+    public static void main(String[] args) {
+        new GameGUI();
+    }
+}
+
+
+
+/*import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.Random;
+
+ class TicTacToe {
+    int boardWidth = 600;
+    int boardHeight = 650; // 50px for the text panel on top
+
+    JFrame frame = new JFrame("Tic-Tac-Toe");
+    JLabel textLabel = new JLabel();
+    JPanel textPanel = new JPanel();
+    JPanel boardPanel = new JPanel();
+
+    JButton[][] board = new JButton[3][3];
+    String playerX = "X";
+    String playerO = "O";
+    String currentPlayer = playerX;
+
+    boolean gameOver = false;
+    int turns = 0;
+
+    TicTacToe() {
+        frame.setVisible(true);
+        frame.setSize(boardWidth, boardHeight);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        textLabel.setBackground(Color.darkGray);
+        textLabel.setForeground(Color.white);
+        textLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        textLabel.setHorizontalAlignment(JLabel.CENTER);
+        textLabel.setText("Tic-Tac-Toe");
+        textLabel.setOpaque(true);
+
+        textPanel.setLayout(new BorderLayout());
+        textPanel.add(textLabel);
+        frame.add(textPanel, BorderLayout.NORTH);
+
+        boardPanel.setLayout(new GridLayout(3, 3));
+        boardPanel.setBackground(Color.darkGray);
+        frame.add(boardPanel);
+
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                JButton tile = new JButton();
+                board[r][c] = tile;
+                boardPanel.add(tile);
+
+                tile.setBackground(Color.darkGray);
+                tile.setForeground(Color.white);
+                tile.setFont(new Font("Arial", Font.BOLD, 120));
+                tile.setFocusable(false);
+
+                tile.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (gameOver) return;
+                        JButton tile = (JButton) e.getSource();
+                        if (tile.getText().equals("")) {
+                            tile.setText(currentPlayer);
+                            turns++;
+                            checkWinner();
+                            if (!gameOver) {
+                                currentPlayer = currentPlayer.equals(playerX) ? playerO : playerX;
+                                textLabel.setText(currentPlayer + "'s turn.");
+                                if (currentPlayer.equals(playerO) && !gameOver) {
+                                    computerMove();
+                                    checkWinner();
+                                    if (!gameOver) {
+                                        currentPlayer = playerX;
+                                        textLabel.setText(currentPlayer + "'s turn.");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    void computerMove() {
+        Random rand = new Random();
+        while (true) {
+            int row = rand.nextInt(3);
+            int col = rand.nextInt(3);
+            if (board[row][col].getText().equals("")) {
+                board[row][col].setText(playerO);
+                turns++;
+                break;
+            }
+        }
+    }
+
+    void checkWinner() {
+        // horizontal
+        for (int r = 0; r < 3; r++) {
+            if (board[r][0].getText().equals("")) continue;
+            if (board[r][0].getText().equals(board[r][1].getText()) &&
+                    board[r][1].getText().equals(board[r][2].getText())) {
+                for (int i = 0; i < 3; i++) {
+                    setWinner(board[r][i]);
+                }
+                gameOver = true;
+                showRestartOption();
+                return;
+            }
+        }
+
+        // vertical
+        for (int c = 0; c < 3; c++) {
+            if (board[0][c].getText().equals("")) continue;
+            if (board[0][c].getText().equals(board[1][c].getText()) &&
+                    board[1][c].getText().equals(board[2][c].getText())) {
+                for (int i = 0; i < 3; i++) {
+                    setWinner(board[i][c]);
+                }
+                gameOver = true;
+                showRestartOption();
+                return;
+            }
+        }
+
+        // diagonally
+        if (board[0][0].getText().equals(board[1][1].getText()) &&
+                board[1][1].getText().equals(board[2][2].getText()) &&
+                board[0][0].getText() != "") {
+            for (int i = 0; i < 3; i++) {
+                setWinner(board[i][i]);
+            }
+            gameOver = true;
+            showRestartOption();
+            return;
+        }
+
+        // anti-diagonally
+        if (board[0][2].getText().equals(board[1][1].getText()) &&
+                board[1][1].getText().equals(board[2][0].getText()) &&
+                board[0][2].getText() != "") {
+            setWinner(board[0][2]);
+            setWinner(board[1][1]);
+            setWinner(board[2][0]);
+            gameOver = true;
+            showRestartOption();
+            return;
+        }
+
+        if (turns == 9) {
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < 3; c++) {
+                    setTie(board[r][c]);
+                }
+            }
+            gameOver = true;
+            showRestartOption();
+        }
+    }
+
+    void setWinner(JButton tile) {
+        tile.setForeground(Color.green);
+        tile.setBackground(Color.gray);
+        textLabel.setText(currentPlayer + " is the winner!");
+    }
+
+    void setTie(JButton tile) {
+        tile.setForeground(Color.orange);
+        tile.setBackground(Color.gray);
+        textLabel.setText("Tie!");
+    }
+
+    void showRestartOption() {
+        int response = JOptionPane.showOptionDialog(frame, "Game Over! Would you like to play again?", "Game Over",
+                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+        if (response == JOptionPane.YES_OPTION) {
+            resetGame();
+        } else {
+            frame.dispose();
+        }
+    }
+
+    void resetGame() {
+        gameOver = false;
+        turns = 0;
+        currentPlayer = playerX;
+        textLabel.setText("Tic-Tac-Toe");
+
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                board[r][c].setText("");
+                board[r][c].setBackground(Color.darkGray);
+                board[r][c].setForeground(Color.white);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new TicTacToe();
+    }
+}*/
+
+
+
 
 
